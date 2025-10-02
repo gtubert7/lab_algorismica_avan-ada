@@ -28,11 +28,9 @@ def holes(G, origin, destination, holes_dct={}):
         heapq.heappush(cua_p, (dist[node], node))
 
     
-    while True:
+    while cua_p:
         u = heapq.heappop(cua_p)
         visited.add(u[1])
-        if u[1] == destination:
-            break
         for vei in G.neighbors(u[1]):
             if vei not in visited:
                 alt = u[0]
