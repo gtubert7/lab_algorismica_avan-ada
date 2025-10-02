@@ -27,5 +27,5 @@ def bfs_aux(G, node, visited, visited_set):
         visited.append(node)
         visited_set.add(node)
 
-        for neigh in node.neighbors:
+        for neigh in G.neighbors(node):
             bfs_aux(G, neigh, visited, visited_set)
