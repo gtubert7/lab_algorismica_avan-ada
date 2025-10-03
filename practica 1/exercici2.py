@@ -13,6 +13,8 @@ def dijkstra_aux(G, origin, destination, holes_dct={}):
     =======
     :path: Una llista de nodes del camí més curt entre els nodes 'origin' i 'destination' (ambdós inclosos).
     :cost: Un enter amb el cost de recórrer el camí, incloent-hi les penalitzacions.
+    :dist: Un diccionari del tipus {node: distància mínima des de l'origen}.
+    :prev: Un diccionari del tipus {node: node anterior en el camí òptim}.
     """
     
     path = []
