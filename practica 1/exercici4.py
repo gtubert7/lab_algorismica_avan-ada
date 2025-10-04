@@ -15,10 +15,12 @@ def checkpoints_list(G, origin, destination, extras, holes_dct={}):
     :path: Una llista de nodes del camí més curt entre els nodes 'origin' i 'destination' que passa per tots els nodes 'extras'.
     :cost: Un enter amb el cost de recórrer el camí, incloent-hi les penalitzacions.
     """
-    
+    # Suposem que existeix un camí entre l'origen i el destí i els nodes extra.
     path = []
     cost = 0
     
+    # Si n és el nombre de nodes extra més l'origen i el destí, cridarem Dijkstra (n - 1) vegades i guardarem cada resultat en aquest
+    # diccionari.
     valors = {}
 
     valors[origin] = dijkstra_aux(G, origin, extras[0], holes_dct)
@@ -32,6 +34,7 @@ def checkpoints_list(G, origin, destination, extras, holes_dct={}):
     cost_min = float("inf")
     permutacio_min = ()
     
+    # Busquem la permutació que ens genera el cost mínim.
     for permutacio in itertools.permutations(extras):
         sum = 0
         cost = valors[origin][2][permutacio[0]]
@@ -48,22 +51,20 @@ def checkpoints_list(G, origin, destination, extras, holes_dct={}):
             permutacio_min = permutacio
     cost = cost_min
     
-    path.append(origin)
-    node_aux = valors[permutacio_min[0]][3][origin]
+    # Ara reconstruïm el camí òptim.
+    node_aux = origin
     while node_aux != permutacio_min[0]:
         path.append(node_aux)
         node_aux = valors[permutacio_min[0]][3][node_aux]
 
     for i in range(len(permutacio) - 1):
-        path.append(permutacio_min[i])
-        node_aux = valors[permutacio_min[i + 1]][3][permutacio_min[i]]
+        node_aux = permutacio_min[i]
         while node_aux != permutacio_min[i + 1]:
             path.append(node_aux)
             node_aux = valors[permutacio_min[i + 1]][3][node_aux]
 
-    path_aux = [destination]
-
-    node_aux = valors[permutacio_min[-1]][3][destination]
+    path_aux = []
+    node_aux = destination
     while node_aux != permutacio_min[-1]:
         path_aux.append(node_aux)
         node_aux = valors[permutacio_min[-1]][3][node_aux]
