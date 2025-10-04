@@ -15,11 +15,11 @@ def checkpoints_list(G, origin, destination, extras, holes_dct={}):
     :path: Una llista de nodes del camí més curt entre els nodes 'origin' i 'destination' que passa per tots els nodes 'extras'.
     :cost: Un enter amb el cost de recórrer el camí, incloent-hi les penalitzacions.
     """
-    # Suposem que existeix un camí entre l'origen i el destí i els nodes extra.
+    # Suposem que existeix un camí entre l'origen i el destí i els nodes extra. Suposem que la llista de nodes extra no és buida.
     path = []
     cost = 0
     
-    # Si n és el nombre de nodes extra més l'origen i el destí, cridarem Dijkstra (n - 1) vegades i guardarem cada resultat en aquest
+    # Si N és el nombre de nodes extra, cridarem Dijkstra (N + 1) vegades i guardarem cada resultat en aquest
     # diccionari.
     valors = {}
 
