@@ -15,32 +15,32 @@ def refill_prices(K, stations, prices):
     :stops: Quilòmetres de les benzineres on fem parada.
     :value: Cost del trajecte.
     """
-    index_estacio_actual = 0
-    barata = float("inf")
+    index_estacio_actual = -1
     estacio_actual = 0
-    exists = False    
     stops = []
-    num_stops = len(stops)
     value = 0.0
     
-    while estacio_actual < stations[-1] and not exists:
-        i = index_estacio_actual
-        exists = False
-        while i < len(prices) and stations[i] - estacio_actual <= K:
-            exists = True
-            if prices[i] < barata:
-                barata = prices[i]
-                index_estacio_actual = i
-            i += 1
-       
+    exists = True
+    while estacio_actual < stations[-1] and exists:
+        if stations[index_estacio_actual + 1] - estacio_actual > K:
+            exists = False
+        elif stations[-1] - estacio_actual <= K:
+            index_estacio_actual = -1
+        else:
+            barata = prices[index_estacio_actual + 1]
+            i = index_estacio_actual + 2
+            index_estacio_actual += 1
+            while i < len(prices) and stations[i] - estacio_actual <= K:
+                if prices[i] < barata:
+                    barata = prices[i]
+                    index_estacio_actual = i
+                i += 1
+            value += prices[index_estacio_actual]*(stations[index_estacio_actual] - estacio_actual)
+            value = round(value, 1)
         
-        value += prices[index_estacio_actual]*(stations[index_estacio_actual] - estacio_actual)
         estacio_actual = stations[index_estacio_actual]
-
         stops.append(estacio_actual)
 
     num_stops = len(stops)
-
-
 
     return exists, num_stops, stops, value
