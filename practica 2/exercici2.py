@@ -36,24 +36,24 @@ def refill_prices_optim(K, stations, prices):
             barata = prices[index_estacio_actual + 1]
             i = index_estacio_actual + 2
             index_estacio_actual += 1
+            #EN AQUEST WHILE NO HAURIA DE SER BARATA > PREU_ACTUAL (ESTRICTE)?
             while i < len(prices) and stations[i] - estacio_actual <= K and barata >= preu_actual:
                 if prices[i] < barata:
                     barata = prices[i]
                     index_estacio_actual = i
                 i += 1
-
+            #I LLAVORS AQUI ANIRIA UN <= ??
             if barata < preu_actual:
+                #Si tenim menys litres del que ens cal:
                 if litres_actuals < stations[index_estacio_actual] - estacio_actual:
                     value += preu_actual*(stations[index_estacio_actual] - estacio_actual - litres_actuals)
                     litres_actuals = 0
                 else:
                     litres_actuals -= stations[index_estacio_actual] - estacio_actual
             else:
-                #CAL FER AIXO
+                #/// FET, potser per revisio
                 value += preu_actual*(K-litres_actuals)
-                    
-                    #tope = hemomplir + actual = dist = varribar - estem >>> hemomplir = varribar - estem - actual
-                    #gasprin + gasomp - disfeta = gasfinal 
+                litres_actuals = K
             value = round(value, 2)
         
         estacio_actual = stations[index_estacio_actual]
