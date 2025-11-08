@@ -65,6 +65,7 @@ def assign_codes(text, counts):
 
     return codes
 
+
 def dfs_aux(node, counts, codes, codi = ""):
     if node == None:
         return
@@ -74,3 +75,52 @@ def dfs_aux(node, counts, codes, codi = ""):
 
     dfs_aux(node.left, counts, codes, codi + "-")
     dfs_aux(node.right, counts, codes, codi + ".")
+
+
+def encode(text, diccionari):
+    """
+    Donat un text a codificar i un diccionari de conversió, codifica el text.
+    
+    Params
+    ======
+    :text: El text que volem codificar
+    :diccionari: El diccionari de conversió que farem servir
+    
+    Returns
+    =======
+    :code: Una representació del text usant només els caràcters '.' i '-'
+    """
+    code = ""
+
+    for letter in text:
+        code += diccionari[letter]
+
+    return code
+
+
+def decode(text, diccionari):
+    """
+    Donat un text a decodificar i un diccionari de conversió, decodifica el text.
+    
+    Params
+    ======
+    :text: El text que volem decodificar (caràcters '.' i '-')
+    :diccionari: El diccionari de conversió que hem fet servir per codificar
+    
+    Returns
+    =======
+    :code: El text resultant de la decodificació.
+    """
+    code_dict = {diccionari[key]: key for key in diccionari}
+    cache = ""
+    code = ""
+    
+    for letter in text:
+        cache += letter
+
+        if cache in code_dict:
+            code += code_dict[cache]
+            cache = ""
+        
+
+    return code
