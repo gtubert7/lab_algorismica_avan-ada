@@ -43,25 +43,19 @@ def assign_codes(text, counts):
     heapq.heapify(nodes_list)
     for key in counts.keys():
         node = Node(key, counts[key])
-        nodes_list.append((counts[key], node))
-        heapq.heappush(nodes_list, (counts[key], node))
+        heapq.heappush(nodes_list, (counts[key], key, node))
 
     while len(nodes_list) >= 2:
-        #node_esq = nodes_list.pop(nodes_list.index(min(nodes_list, key = lambda node: node[0])))[1]
-        node_esq = heapq.heappop(nodes_list)[1]
-        #node_dreta = nodes_list.pop(nodes_list.index(min(nodes_list, key = lambda node: node[0])))[1]
-        node_dreta = heapq.heappop(nodes_list)[1]
+        node_esq = heapq.heappop(nodes_list)[2]
+        node_dreta = heapq.heappop(nodes_list)[2]
 
         suma = node_esq.value + node_dreta.value
-        node_suma = Node(suma, suma, node_esq, node_dreta)
+        nom_suma = node_esq.node + node_dreta.node
+        node_suma = Node(nom_suma, suma, node_esq, node_dreta)
 
-        node_esq.set_code("-")
-        node_dreta.set_code(".")
-
-        #nodes_list.append((suma, node_suma))
-        heapq.heappush((suma, node_suma))
+        heapq.heappush(nodes_list, (suma, nom_suma, node_suma))
     
-    dfs_aux(nodes_list[0][1], counts, codes)
+    dfs_aux(nodes_list[0][2], counts, codes)
 
     return codes
 
