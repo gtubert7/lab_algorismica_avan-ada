@@ -58,7 +58,7 @@ def refill_prices_optim(K, stations, prices):
         
         estacio_actual = stations[index_estacio_actual]
         stops.append(estacio_actual)
-
+    #Aqui passa alguna cosa estranya amb els preus?????
     num_stops = len(stops)
 
     return exists, num_stops, stops, value
