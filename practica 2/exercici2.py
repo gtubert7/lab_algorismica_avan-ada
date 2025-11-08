@@ -51,14 +51,15 @@ def refill_prices_optim(K, stations, prices):
                 else:
                     litres_actuals -= stations[index_estacio_actual] - estacio_actual
             else:
-                #/// FET, potser per revisio
+                #CAL FER AIXO /// FET, potser per revisio
                 value += preu_actual*(K-litres_actuals)
-                litres_actuals = K
+                litres_actuals = K - stations[index_estacio_actual] + estacio_actual
+
             value = round(value, 2)
         
         estacio_actual = stations[index_estacio_actual]
         stops.append(estacio_actual)
-    #Aqui passa alguna cosa estranya amb els preus?????
+
     num_stops = len(stops)
 
     return exists, num_stops, stops, value
