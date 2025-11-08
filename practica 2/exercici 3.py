@@ -59,7 +59,7 @@ def assign_codes(text, counts):
         nodes_list.append((suma, node_suma))
 
     #Fem un dfs per l'arbre amb la intencio de assignar un codi a cada lletra
-    dfs_aux(max(nodes_list, key = lambda node: node[0])[1], counts, codes)
+    dfs_aux(nodes_list[0][1], counts, codes)
 
     return codes
 
