@@ -28,31 +28,38 @@ def refill_prices_optim(K, stations, prices):
     litres_actuals = K
 
     exists = True
+    #Revisem que no haguem arribat ja a l'estacio
     while estacio_actual < stations[-1] and exists:
+        #Revisem que tenim prou benzina per arribar com a minim a la benzinera més inmediata
         if stations[index_estacio_actual + 1] - estacio_actual > K:
             exists = False
         else:
+            #Ens guardem el preu de la benzinera on estem
             preu_actual = prices[index_estacio_actual]
+            #Busquem la propera benzinera més barata
             barata = prices[index_estacio_actual + 1]
             i = index_estacio_actual + 2
             index_estacio_actual += 1
-            #EN AQUEST WHILE NO HAURIA DE SER BARATA > PREU_ACTUAL (ESTRICTE)?
             while i < len(prices) and stations[i] - estacio_actual <= K and barata >= preu_actual:
                 if prices[i] < barata:
                     barata = prices[i]
                     index_estacio_actual = i
                 i += 1
-            #I LLAVORS AQUI ANIRIA UN <= ??
+            #Mirem si el preu de la benzinera on volem anar es menor que on som ara
             if barata < preu_actual:
                 #Si tenim menys litres del que ens cal:
                 if litres_actuals < stations[index_estacio_actual] - estacio_actual:
+                    #Emplenem la quantitat esctrictament necessaria per arribar a la següent
                     value += preu_actual*(stations[index_estacio_actual] - estacio_actual - litres_actuals)
                     litres_actuals = 0
                 else:
+                    #No cal emplenar
                     litres_actuals -= stations[index_estacio_actual] - estacio_actual
+            #Si la benzinera que hem seleccionat es mes cara que l'actual
             else:
-                #CAL FER AIXO /// FET, potser per revisio
+                #Omplim a la que estem fins al maxim
                 value += preu_actual*(K-litres_actuals)
+                #Arribem a la següent amb els litres que no hem gastat
                 litres_actuals = K - stations[index_estacio_actual] + estacio_actual
 
             value = round(value, 2)
@@ -64,5 +71,4 @@ def refill_prices_optim(K, stations, prices):
 
     return exists, num_stops, stops, value
 
-    return exists, num_stops, stops, value
         
