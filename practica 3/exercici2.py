@@ -35,24 +35,25 @@ def remove_patch(im, patch):
             (i2, j2) és la coordenada inferior dreta del patch.
             Aquestes dues parelles s'han d'incloure com a part del patch.
     """
-    N = 50
+    N = patch[1][1] - patch[0][1]
+    im_patch = im.copy()
 
-    im_titles = [(im, 'Imatge original'), (get_gradient(im), "Gradient")]
+    im_titles = [(im, 'Imatge original'), (add_patch(im_patch, patch), "Patch")]
     mat = minimal_paths(get_gradient(im), patch)
-    mat[patch[0][0]:patch[1][0], patch[0][1]:patch[1][1]]
     path = find_min_path(mat)
     im_path = im.copy()
     im_path = add_min_path(im_path, path)
     im_titles.append((im_path, 'Primer camí a eliminar'))
     im = delete_path(im, path)
-    for _ in range(N - 1):
+    for _ in range(N ):
         mat = minimal_paths(get_gradient(im), patch)
-        mat[patch[0][0]:patch[1][0], patch[0][1]:patch[1][1]]
+        im_path = add_min_path(im_path, path)
         path = find_min_path(mat)
         im = delete_path(im, path)
+    im_titles.append((im_path, "Tots els camins"))
     im_titles.append((im, 'Imatge final'))
     show_row(im_titles)
-
+    
     pass
 
 def minimal_paths(mat, patch):
