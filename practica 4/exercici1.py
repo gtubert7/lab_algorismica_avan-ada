@@ -51,7 +51,7 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
             if grid[i, y] > max:
                 max = grid[i, y]
                 num_visibles += 1
-                if num_visibles > bottom[y] and y == len(grid) - 1:
+                if num_visibles > bottom[y] and x == len(grid) - 1:
                     grid[x, y] = 0
                     print("Massa visibles bottom")
                     return False
