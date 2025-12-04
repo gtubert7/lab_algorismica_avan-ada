@@ -20,48 +20,77 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
     """
     
     # EL TEU CODI AQUÍ
-
+    print("x =", x, ", y =", y, ", num =", num)
     # Comprovació fila i columna
     if num in grid[x] or num in grid[:, y]:
+        print("Col·lisió fila o columna")
         return False
     
-    # Comprovació top 
-    max = 0
-    num_visibles = 0
-    for i in range(len(top)):
-        if grid[i, y] > max:
-            max = grid[i, y]
-            num_visibles += 1
-            if num_visibles > top[y]:
-                return False
+    grid[x, y] = num
+    # Comprovació top
+    if top[y] > 0:
+        max = 0
+        num_visibles = 0
+        for i in range(len(top)):
+            if grid[i, y] > max:
+                max = grid[i, y]
+                num_visibles += 1
+                if num_visibles > top[y]:
+                    grid[x, y] = 0
+                    print("Massa visibles top")
+                    return False
+        if num_visibles + np.sum(grid[:, y] == 0) < top[y]:
+            grid[x, y] = 0
+            print("Massa pocs top")
+            return False
     # Comprovació bottom
-    max = 0
-    num_visibles = 0
-    for i in range(len(bottom) - 1, -1, -1):
-        if grid[i, y] > max:
-            max = grid[i, y]
-            num_visibles += 1
-            if num_visibles > bottom[y]:
-                return False
+    if bottom[y] > 0:
+        max = 0
+        num_visibles = 0
+        for i in range(len(bottom) - 1, -1, -1):
+            if grid[i, y] > max:
+                max = grid[i, y]
+                num_visibles += 1
+                if num_visibles > bottom[y] and y == len(grid) - 1:
+                    grid[x, y] = 0
+                    print("Massa visibles bottom")
+                    return False
+        if num_visibles + np.sum(grid[:, y] == 0) < bottom[y]:
+            grid[x, y] = 0
+            print("Massa pocs bottom")
+            return False
     # Comprovació left
-    max = 0
-    num_visibles = 0
-    for j in range(len(left)):
-        if grid[x, j] > max:
-            max = grid[i, y]
-            num_visibles += 1
-            if num_visibles > left[x]:
-                return False
+    if left[x] > 0:
+        max = 0
+        num_visibles = 0
+        for j in range(len(left)):
+            if grid[x, j] > max:
+                max = grid[x, j]
+                num_visibles += 1
+                if num_visibles > left[x]:
+                    grid[x, y] = 0
+                    print("Massa visibles left")
+                    return False
+        if num_visibles + np.sum(grid[x] == 0) < left[x]:
+            grid[x, y] = 0
+            print("Massa pocs left")
+            return False
     # Comprovació right
-    max = 0
-    num_visibles = 0
-    for j in range(len(right) - 1, -1, -1):
-        if grid[x, j] > max:
-            max = grid[i, y]
-            num_visibles += 1
-            if num_visibles > right[x]:
-                return False
-    
+    if right[x] > 0:
+        max = 0
+        num_visibles = 0
+        for j in range(len(right) - 1, -1, -1):
+            if grid[x, j] > max:
+                max = grid[x, j]
+                num_visibles += 1
+                if num_visibles > right[x] and y == len(grid) - 1:
+                    grid[x, y] = 0
+                    print("Massa visibles right")
+                    return False
+        if num_visibles + np.sum(grid[x] == 0) < right[x]:
+            grid[x, y] = 0
+            print("Massa pocs right")
+            return False
     return True
     
 
@@ -87,7 +116,7 @@ def skyscrapper_backtracking(grid, top, bottom, left, right):
     
     # EL TEU CODI AQUÍ
     if not (grid == 0).any():
-        return grid
+        return list(grid)
     llista_x, llista_y = np.where(grid == 0)
     # TODO: canviar política
     x = llista_x[0]
@@ -95,10 +124,15 @@ def skyscrapper_backtracking(grid, top, bottom, left, right):
     # TODO: canviar política
     for num in [i for i in range(1, len(grid) + 1)]:
         if satisfies(grid, x, y, num, top, bottom, left, right):
-            grid[x, y] = num
+            #delayed_print(grid, top, bottom, left, right, sleep_time=0.01)
+            # L'operació grid[x, y] = num es fa a satisfies() si se satisfan les condicions.
             ok = skyscrapper_backtracking(grid, top, bottom, left, right)
             if ok:
                 return ok
+            grid[x, y] = 0
+        #grid[x, y] = num
+        #delayed_print(grid, top, bottom, left, right, sleep_time=0.01)
+        #grid[x, y] = 0
     
     return False
     
