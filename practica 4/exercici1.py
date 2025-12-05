@@ -129,7 +129,7 @@ def skyscrapper_backtracking(grid, top, bottom, left, right):
     x = llista_x[0]
     y = llista_y[0]
     # TODO: canviar política
-    for num in [i for i in range(1, len(grid) + 1)]:
+    for num in range(1, len(grid) + 1):
         if satisfies(grid, x, y, num, top, bottom, left, right):
             # L'operació grid[x, y] = num es fa a satisfies() si se satisfan les condicions.
             ok = skyscrapper_backtracking(grid, top, bottom, left, right)
@@ -139,58 +139,67 @@ def skyscrapper_backtracking(grid, top, bottom, left, right):
     
     return False
 
+# Falta veure que omplir sigui compatible
 def preinicialitza(grid, top, bottom, left, right):
     # Comprovem top
     for j in range(len(top)):
         if top[j] == 1:
             if grid[0, j] == 0:
-                grid[0, j] = len(grid)
+                if not satisfies(grid, 0, j, len(grid), top, bottom, left, right):
+                    return False
             elif grid[0, j] != len(grid):
                 return False
         elif top[j] == len(grid):
             for k in range(len(grid)):
                 if grid[k, j] == 0:
-                    grid[k, j] = k + 1
+                    if not satisfies(grid, k, j, k + 1, top, bottom, left, right):
+                        return False
                 elif grid[k, j] != k + 1:
                     return False
     # Comprovem bottom
     for j in range(len(bottom)):
         if bottom[j] == 1:
             if grid[len(grid) - 1, j] == 0:
-                grid[len(grid) - 1, j] = len(grid)
+                if not satisfies(grid, len(grid) - 1, j, len(grid), top, bottom, left, right):
+                    return False
             elif grid[len(grid) - 1, j] != len(grid):
                 return False
         elif bottom[j] == len(grid):
             for k in range(len(grid)):
                 if grid[k, j] == 0:
-                    grid[k, j] = len(grid) - k
+                    if not satisfies(grid, k, j, len(grid) - k, top, bottom, left, right):
+                        return False
                 elif grid[k, j] != len(grid) - k:
                     return False
     # Comprovem left
     for i in range(len(left)):
         if left[i] == 1:
             if grid[i, 0] == 0:
-                grid[i, 0] = len(grid)
+                if not satisfies(grid, i, 0, len(grid), top, bottom, left, right):
+                    return False
             elif grid[i, 0] != len(grid):
                 return False
         elif left[i] == len(grid):
             for k in range(len(grid)):
                 if grid[i, k] == 0:
-                    grid[i, k] = k + 1
+                    if not satisfies(grid, i, k, k + 1, top, bottom, left, right):
+                        return False
                 elif grid[i, k] != k + 1:
                     return False
     # Comprovem right
     for i in range(len(right)):
         if right[i] == 1:
             if grid[i, len(grid) - 1] == 0:
-                grid[i, len(grid) - 1] = len(grid)
+                if not satisfies(grid, i, len(grid) - 1, len(grid), top, bottom, left, right):
+                    return False
             elif grid[i, len(grid) - 1] != len(grid):
                 return False
         elif right[i] == len(grid):
             for k in range(len(grid)):
-                if grid[j, k] == 0:
-                    grid[j, k] = len(grid) - k
-                elif grid[j, k] != len(grid) - k:
+                if grid[i, k] == 0:
+                    if not satisfies(grid, i, k, len(grid) - k, top, bottom, left, right):
+                        return False
+                elif grid[i, k] != len(grid) - k:
                     return False
     return True
 
