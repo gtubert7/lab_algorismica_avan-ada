@@ -139,7 +139,6 @@ def skyscrapper_backtracking(grid, top, bottom, left, right):
     
     return False
 
-# Falta veure que omplir sigui compatible
 def preinicialitza(grid, top, bottom, left, right):
     # Comprovem top
     for j in range(len(top)):
