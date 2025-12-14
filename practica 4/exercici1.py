@@ -28,78 +28,101 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
     # Comprovació top
     if 1 < top[y] < len(grid):
         # Comprovacio rara
-        if top[y] + num >= 2 + len(grid):
-            if top[y] + num - len(grid) > x + 1:
-                grid[x, y] = 0
-                return False
+        if top[y] + num - len(grid) > x + 1:
+            grid[x, y] = 0
+            return False
         max = 0
         num_visibles = 0
+        zeros_entremig = 0
+        zeros_acum = 0
         for i in range(len(top)):
+            if grid[i, y] == 0:
+                zeros_acum += 1
+            else:
+                zeros_entremig += zeros_acum
+                zeros_acum = 0
             if grid[i, y] > max:
                 max = grid[i, y]
                 num_visibles += 1
                 if num_visibles > top[y]:
                     grid[x, y] = 0
                     return False
-        if num_visibles + np.sum(grid[:, y] == 0) < top[y]:
+        if len(grid) - max + zeros_entremig < top[y] - num_visibles:
             grid[x, y] = 0
             return False
     # Comprovació bottom
     if 1 < bottom[y] < len(grid):
-        if bottom[y] + num >= 2 + len(grid):
-            if len(grid) - (bottom[y] + num - len(grid)) < x:
-                grid[x, y] = 0
-                return False
+        if len(grid) - (bottom[y] + num - len(grid)) < x:
+            grid[x, y] = 0
+            return False
         max = 0
         num_visibles = 0
+        zeros_entremig = 0
+        zeros_acum = 0
         for i in range(len(bottom) - 1, -1, -1):
+            if grid[i, y] == 0:
+                zeros_acum += 1
+            else:
+                zeros_entremig += zeros_acum
+                zeros_acum = 0
             if grid[i, y] > max:
                 max = grid[i, y]
                 num_visibles += 1
                 if num_visibles > bottom[y] and x == len(grid) - 1:
                     grid[x, y] = 0
                     return False
-        if num_visibles + np.sum(grid[:, y] == 0) < bottom[y]:
+        if len(grid) - max + zeros_entremig < bottom[y] - num_visibles:
             grid[x, y] = 0
             return False
     # Comprovació left
     if 1 < left[x] < len(grid):
-        if left[y] + num >= 2 + len(grid):
-            if left[x] + num - len(grid) > y + 1:
-                grid[x, y] = 0
-                return False
+        if left[x] + num - len(grid) > y + 1:
+            grid[x, y] = 0
+            return False
         max = 0
         num_visibles = 0
+        zeros_entremig = 0
+        zeros_acum = 0
         for j in range(len(left)):
+            if grid[x, j] == 0:
+                zeros_acum += 1
+            else:
+                zeros_entremig += zeros_acum
+                zeros_acum = 0
             if grid[x, j] > max:
                 max = grid[x, j]
                 num_visibles += 1
                 if num_visibles > left[x]:
                     grid[x, y] = 0
                     return False
-        if num_visibles + np.sum(grid[x] == 0) < left[x]:
+        if len(grid) - max + zeros_entremig < left[x] - num_visibles:
             grid[x, y] = 0
             return False
     # Comprovació right
     if 1 < right[x] < len(grid):
-        if right[x] + num >= 2 + len(grid):
-            if len(grid) - (right[x] + num - len(grid)) < y:
-                grid[x, y] = 0
-                return False
+        if len(grid) - (right[x] + num - len(grid)) < y:
+            grid[x, y] = 0
+            return False
         max = 0
         num_visibles = 0
+        zeros_entremig = 0
+        zeros_acum = 0
         for j in range(len(right) - 1, -1, -1):
+            if grid[x, j] == 0:
+                zeros_acum += 1
+            else:
+                zeros_entremig += zeros_acum
+                zeros_acum = 0
             if grid[x, j] > max:
                 max = grid[x, j]
                 num_visibles += 1
                 if num_visibles > right[x] and y == len(grid) - 1:
                     grid[x, y] = 0
                     return False
-        if num_visibles + np.sum(grid[x] == 0) < right[x]:
+        if len(grid) - max + zeros_entremig < right[x] - num_visibles:
             grid[x, y] = 0
             return False
     return True
-    
 
 def skyscrapper_backtracking(grid, top, bottom, left, right):  
     """
