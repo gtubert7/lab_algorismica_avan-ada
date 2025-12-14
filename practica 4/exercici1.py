@@ -1,7 +1,7 @@
 ###
 # LES VOSTRES FUNCIONS EXTRES AQUÍ
 ###
-import numpy as np
+
 def satisfies(grid, x, y, num, top, bottom, left, right):
     """
     Donat un tauler, un punt amb coordenades (x,y) i un nombre 'num', comprova si és possible assignar-lo a la posició (x,y) 
