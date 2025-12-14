@@ -20,48 +20,84 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
     """
     
     # EL TEU CODI AQUÍ
-
     # Comprovació fila i columna
     if num in grid[x] or num in grid[:, y]:
         return False
     
-    # Comprovació top 
-    max = 0
-    num_visibles = 0
-    for i in range(len(top)):
-        if grid[i, y] > max:
-            max = grid[i, y]
-            num_visibles += 1
-            if num_visibles > top[y]:
+    grid[x, y] = num
+    # Comprovació top
+    if 1 < top[y] < len(grid):
+        # Comprovacio rara
+        if top[y] + num >= 2 + len(grid):
+            if top[y] + num - len(grid) > x + 1:
+                grid[x, y] = 0
                 return False
+        max = 0
+        num_visibles = 0
+        for i in range(len(top)):
+            if grid[i, y] > max:
+                max = grid[i, y]
+                num_visibles += 1
+                if num_visibles > top[y]:
+                    grid[x, y] = 0
+                    return False
+        if num_visibles + np.sum(grid[:, y] == 0) < top[y]:
+            grid[x, y] = 0
+            return False
     # Comprovació bottom
-    max = 0
-    num_visibles = 0
-    for i in range(len(bottom) - 1, -1, -1):
-        if grid[i, y] > max:
-            max = grid[i, y]
-            num_visibles += 1
-            if num_visibles > bottom[y]:
+    if 1 < bottom[y] < len(grid):
+        if bottom[y] + num >= 2 + len(grid):
+            if len(grid) - (bottom[y] + num - len(grid)) < x:
+                grid[x, y] = 0
                 return False
+        max = 0
+        num_visibles = 0
+        for i in range(len(bottom) - 1, -1, -1):
+            if grid[i, y] > max:
+                max = grid[i, y]
+                num_visibles += 1
+                if num_visibles > bottom[y] and x == len(grid) - 1:
+                    grid[x, y] = 0
+                    return False
+        if num_visibles + np.sum(grid[:, y] == 0) < bottom[y]:
+            grid[x, y] = 0
+            return False
     # Comprovació left
-    max = 0
-    num_visibles = 0
-    for j in range(len(left)):
-        if grid[x, j] > max:
-            max = grid[i, y]
-            num_visibles += 1
-            if num_visibles > left[x]:
+    if 1 < left[x] < len(grid):
+        if left[y] + num >= 2 + len(grid):
+            if left[x] + num - len(grid) > y + 1:
+                grid[x, y] = 0
                 return False
+        max = 0
+        num_visibles = 0
+        for j in range(len(left)):
+            if grid[x, j] > max:
+                max = grid[x, j]
+                num_visibles += 1
+                if num_visibles > left[x]:
+                    grid[x, y] = 0
+                    return False
+        if num_visibles + np.sum(grid[x] == 0) < left[x]:
+            grid[x, y] = 0
+            return False
     # Comprovació right
-    max = 0
-    num_visibles = 0
-    for j in range(len(right) - 1, -1, -1):
-        if grid[x, j] > max:
-            max = grid[i, y]
-            num_visibles += 1
-            if num_visibles > right[x]:
+    if 1 < right[x] < len(grid):
+        if right[x] + num >= 2 + len(grid):
+            if len(grid) - (right[x] + num - len(grid)) < y:
+                grid[x, y] = 0
                 return False
-    
+        max = 0
+        num_visibles = 0
+        for j in range(len(right) - 1, -1, -1):
+            if grid[x, j] > max:
+                max = grid[x, j]
+                num_visibles += 1
+                if num_visibles > right[x] and y == len(grid) - 1:
+                    grid[x, y] = 0
+                    return False
+        if num_visibles + np.sum(grid[x] == 0) < right[x]:
+            grid[x, y] = 0
+            return False
     return True
     
 
@@ -87,21 +123,85 @@ def skyscrapper_backtracking(grid, top, bottom, left, right):
     
     # EL TEU CODI AQUÍ
     if not (grid == 0).any():
-        return grid
+        return list(grid)
     llista_x, llista_y = np.where(grid == 0)
     # TODO: canviar política
     x = llista_x[0]
     y = llista_y[0]
     # TODO: canviar política
-    for num in [i for i in range(1, len(grid) + 1)]:
+    for num in range(1, len(grid) + 1):
         if satisfies(grid, x, y, num, top, bottom, left, right):
-            grid[x, y] = num
+            # L'operació grid[x, y] = num es fa a satisfies() si se satisfan les condicions.
             ok = skyscrapper_backtracking(grid, top, bottom, left, right)
             if ok:
                 return ok
+            grid[x, y] = 0
     
     return False
-    
+
+def preinicialitza(grid, top, bottom, left, right):
+    # Comprovem top
+    for j in range(len(top)):
+        if top[j] == 1:
+            if grid[0, j] == 0:
+                if not satisfies(grid, 0, j, len(grid), top, bottom, left, right):
+                    return False
+            elif grid[0, j] != len(grid):
+                return False
+        elif top[j] == len(grid):
+            for k in range(len(grid)):
+                if grid[k, j] == 0:
+                    if not satisfies(grid, k, j, k + 1, top, bottom, left, right):
+                        return False
+                elif grid[k, j] != k + 1:
+                    return False
+    # Comprovem bottom
+    for j in range(len(bottom)):
+        if bottom[j] == 1:
+            if grid[len(grid) - 1, j] == 0:
+                if not satisfies(grid, len(grid) - 1, j, len(grid), top, bottom, left, right):
+                    return False
+            elif grid[len(grid) - 1, j] != len(grid):
+                return False
+        elif bottom[j] == len(grid):
+            for k in range(len(grid)):
+                if grid[k, j] == 0:
+                    if not satisfies(grid, k, j, len(grid) - k, top, bottom, left, right):
+                        return False
+                elif grid[k, j] != len(grid) - k:
+                    return False
+    # Comprovem left
+    for i in range(len(left)):
+        if left[i] == 1:
+            if grid[i, 0] == 0:
+                if not satisfies(grid, i, 0, len(grid), top, bottom, left, right):
+                    return False
+            elif grid[i, 0] != len(grid):
+                return False
+        elif left[i] == len(grid):
+            for k in range(len(grid)):
+                if grid[i, k] == 0:
+                    if not satisfies(grid, i, k, k + 1, top, bottom, left, right):
+                        return False
+                elif grid[i, k] != k + 1:
+                    return False
+    # Comprovem right
+    for i in range(len(right)):
+        if right[i] == 1:
+            if grid[i, len(grid) - 1] == 0:
+                if not satisfies(grid, i, len(grid) - 1, len(grid), top, bottom, left, right):
+                    return False
+            elif grid[i, len(grid) - 1] != len(grid):
+                return False
+        elif right[i] == len(grid):
+            for k in range(len(grid)):
+                if grid[i, k] == 0:
+                    if not satisfies(grid, i, k, len(grid) - k, top, bottom, left, right):
+                        return False
+                elif grid[i, k] != len(grid) - k:
+                    return False
+    return True
+
 def skyscrapper(top, bottom, left, right):
     """
     Funció principal del problema. Rep quatre llistes corresponents als nombres que hi ha fora del tauler.
@@ -113,6 +213,11 @@ def skyscrapper(top, bottom, left, right):
     
     # Inicialitzem una matriu de zeros
     grid = np.zeros((len(left), len(top)), dtype='int')
+
+    # Codi afegit: preinicialització
+    if not preinicialitza(grid, top, bottom, left, right):
+        print('No solution found')
+        return
     
     # Cridem a la funció que soluciona el problema mitjançant backtracking
     sol = skyscrapper_backtracking(grid, top, bottom, left, right)   
