@@ -44,7 +44,7 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
             if grid[i, y] > max:
                 max = grid[i, y]
                 num_visibles += 1
-                if num_visibles > top[y]:
+                if (num_visibles > top[y] or (num_visibles == top[y] and max != len(grid))) and zeros_entremig == 0:
                     grid[x, y] = 0
                     return False
         if len(grid) - max + zeros_entremig < top[y] - num_visibles:
@@ -68,7 +68,7 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
             if grid[i, y] > max:
                 max = grid[i, y]
                 num_visibles += 1
-                if num_visibles > bottom[y] and x == len(grid) - 1:
+                if (num_visibles > bottom[y] or (num_visibles == bottom[y] and max != len(grid))) and zeros_entremig == 0:
                     grid[x, y] = 0
                     return False
         if len(grid) - max + zeros_entremig < bottom[y] - num_visibles:
@@ -92,7 +92,7 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
             if grid[x, j] > max:
                 max = grid[x, j]
                 num_visibles += 1
-                if num_visibles > left[x]:
+                if (num_visibles > left[x] or (num_visibles == left[x] and max != len(grid))) and zeros_entremig == 0:
                     grid[x, y] = 0
                     return False
         if len(grid) - max + zeros_entremig < left[x] - num_visibles:
@@ -116,7 +116,7 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
             if grid[x, j] > max:
                 max = grid[x, j]
                 num_visibles += 1
-                if num_visibles > right[x] and y == len(grid) - 1:
+                if (num_visibles > right[x] or (num_visibles == right[x] and max != len(grid))) and zeros_entremig == 0:
                     grid[x, y] = 0
                     return False
         if len(grid) - max + zeros_entremig < right[x] - num_visibles:
@@ -178,6 +178,15 @@ def preinicialitza(grid, top, bottom, left, right):
                         return False
                 elif grid[k, j] != k + 1:
                     return False
+        # Comprovació de si top i bottom sumen N + 1; la posició de l'edifici de mida N està determinada
+        elif top[j] + bottom[j] == len(grid) + 1:
+            if grid[top[j] - 1, j] == 0:
+                if not satisfies(grid, top[j] - 1, j, len(grid), top, bottom, left, right):
+                    return False
+                elif grid[top[j] - 1, j] != len(grid):
+                    return False
+        elif top[j] + bottom[j] > len(grid) + 1:
+            return False
     # Comprovem bottom
     for j in range(len(bottom)):
         if bottom[j] == 1:
@@ -208,6 +217,15 @@ def preinicialitza(grid, top, bottom, left, right):
                         return False
                 elif grid[i, k] != k + 1:
                     return False
+        # Comprovació de si left i right sumen N + 1; la posició de l'edifici de mida N està determinada
+        elif left[i] + right[i] == len(grid) + 1:
+            if grid[i, left[i] - 1] == 0:
+                if not satisfies(grid, i, left[i] - 1, len(grid), top, bottom, left, right):
+                    return False
+                elif grid[i, left[i] - 1] != len(grid):
+                    return False
+        elif left[i] + right[i] > len(grid) + 1:
+            return False
     # Comprovem right
     for i in range(len(right)):
         if right[i] == 1:
