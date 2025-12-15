@@ -247,6 +247,19 @@ def skyscrapper(top, bottom, left, right):
     :top, bottom, left, right: Els nombres de fora del tauler de la part superior, inferior, esquerra i dreta, respectivament.
     """
     
+    if not len(top) == len(bottom) == len(left) == len(right):
+        print("Les condicios de top, bottom, left i right son de mesures diferents")
+        return False
+    
+    #Comprovem que les llistes tinguin sentit
+    max_condition = len(top)
+    llista_condicions = [top, bottom, left, right]
+    for condicions in llista_condicions:
+        for condicio in condicions:
+            if condicio > max_condition:
+                print(f"Hi ha alguna condicio que requereix més edificis visibles que espai tenim")
+                return False
+            
     # Inicialitzem una matriu de zeros
     grid = np.zeros((len(left), len(top)), dtype='int')
 
