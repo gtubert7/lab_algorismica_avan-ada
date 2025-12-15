@@ -27,7 +27,6 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
     grid[x, y] = num
     # Comprovació top
     if 1 < top[y] < len(grid):
-        # Comprovacio rara
         if top[y] + num - len(grid) > x + 1:
             grid[x, y] = 0
             return False
@@ -38,12 +37,10 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
         for i in range(len(top)):
             if grid[i, y] == 0:
                 zeros_acum += 1
-            else:
-                zeros_entremig += zeros_acum
-                zeros_acum = 0
             if grid[i, y] > max:
                 max = grid[i, y]
                 num_visibles += 1
+                zeros_entremig = zeros_acum
                 if (num_visibles > top[y] or (num_visibles == top[y] and max != len(grid))) and zeros_entremig == 0:
                     grid[x, y] = 0
                     return False
@@ -62,12 +59,10 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
         for i in range(len(bottom) - 1, -1, -1):
             if grid[i, y] == 0:
                 zeros_acum += 1
-            else:
-                zeros_entremig += zeros_acum
-                zeros_acum = 0
             if grid[i, y] > max:
                 max = grid[i, y]
                 num_visibles += 1
+                zeros_entremig = zeros_acum
                 if (num_visibles > bottom[y] or (num_visibles == bottom[y] and max != len(grid))) and zeros_entremig == 0:
                     grid[x, y] = 0
                     return False
@@ -86,12 +81,10 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
         for j in range(len(left)):
             if grid[x, j] == 0:
                 zeros_acum += 1
-            else:
-                zeros_entremig += zeros_acum
-                zeros_acum = 0
             if grid[x, j] > max:
                 max = grid[x, j]
                 num_visibles += 1
+                zeros_entremig = zeros_acum
                 if (num_visibles > left[x] or (num_visibles == left[x] and max != len(grid))) and zeros_entremig == 0:
                     grid[x, y] = 0
                     return False
@@ -110,12 +103,10 @@ def satisfies(grid, x, y, num, top, bottom, left, right):
         for j in range(len(right) - 1, -1, -1):
             if grid[x, j] == 0:
                 zeros_acum += 1
-            else:
-                zeros_entremig += zeros_acum
-                zeros_acum = 0
             if grid[x, j] > max:
                 max = grid[x, j]
                 num_visibles += 1
+                zeros_entremig = zeros_acum
                 if (num_visibles > right[x] or (num_visibles == right[x] and max != len(grid))) and zeros_entremig == 0:
                     grid[x, y] = 0
                     return False
